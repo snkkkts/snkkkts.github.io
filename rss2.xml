@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>snkの学习分享</title>
+    <link>http://example.com/</link>
+    
+    <atom:link href="http://example.com/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>循此苦旅，直抵群星</description>
+    <pubDate>Fri, 22 Dec 2023 15:23:12 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>建站目的</title>
+      <link>http://example.com/posts/5048c436.html</link>
+      <guid>http://example.com/posts/5048c436.html</guid>
+      <pubDate>Fri, 22 Dec 2023 08:06:23 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h1 id=&quot;Hello-World&quot;&gt;&lt;a href=&quot;#Hello-World&quot; class=&quot;headerlink&quot; title=&quot;Hello World&quot;&gt;&lt;/a&gt;Hello World&lt;/h1&gt;&lt;p&gt;你好，这里是snkkkts，你也可以叫我snk（雾&lt;/p&gt;
+&lt;p&gt;总</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h1><p>你好，这里是snkkkts，你也可以叫我snk（雾</p><p>总之，这里是我的个人博客。在接下来的的几年里，我会在这里更新很多的内容，从数据结构与算法的学习笔记，到数学分析、线性代数等数学内容，再到经典好书的摘抄和读书心得，再到平时的随笔等等都会在这个博客上更新。</p><p>如果你也有一些想法想要分享，那么欢迎评论哦~</p>]]></content:encoded>
+      
+      
+      <category domain="http://example.com/categories/first/">first</category>
+      
+      
+      
+      <comments>http://example.com/posts/5048c436.html#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>
