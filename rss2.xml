@@ -9,7 +9,7 @@
     <atom:link href="http://example.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>循此苦旅，直抵群星</description>
-    <pubDate>Fri, 22 Dec 2023 15:23:12 GMT</pubDate>
+    <pubDate>Fri, 22 Dec 2023 15:48:35 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -28,8 +28,6 @@
       
       <content:encoded><![CDATA[<h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h1><p>你好，这里是snkkkts，你也可以叫我snk（雾</p><p>总之，这里是我的个人博客。在接下来的的几年里，我会在这里更新很多的内容，从数据结构与算法的学习笔记，到数学分析、线性代数等数学内容，再到经典好书的摘抄和读书心得，再到平时的随笔等等都会在这个博客上更新。</p><p>如果你也有一些想法想要分享，那么欢迎评论哦~</p>]]></content:encoded>
       
-      
-      <category domain="http://example.com/categories/first/">first</category>
       
       
       
