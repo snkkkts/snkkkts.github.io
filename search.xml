@@ -36,6 +36,77 @@ Out）的原理运作，堆栈常用一维数组或链接串列来实现。常�
 <h3 id="简单的基于数组的栈实现">1.2 简单的基于数组的栈实现</h3>
 <p> 我们可以简单地通过在<strong>Python</strong>列表中存储一些元素来实现一个栈。list类已支持append方法，用于添加一个元素到列表底部，并且支持pop方法，用于移除列表中最后的元素，所以我们可以很自然地将一个列表的尾部与一个栈的顶部相对应起来。这样我们就简单地实现了一个栈的模拟。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">st = [<span class="number">5</span>, <span class="number">1</span>, <span class="number">4</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 append() 向栈顶添加元素</span></span><br><span class="line">st.append(<span class="number">2</span>)</span><br><span class="line">st.append(<span class="number">3</span>)</span><br><span class="line"><span class="comment"># &gt;&gt;&gt; st</span></span><br><span class="line"><span class="comment"># [5, 1, 4, 2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 pop 取出栈顶元素</span></span><br><span class="line">st.pop()</span><br><span class="line"><span class="comment"># &gt;&gt;&gt; st</span></span><br><span class="line"><span class="comment"># [5, 1, 4, 2]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 clear 清空栈</span></span><br><span class="line">st.clear()</span><br></pre></td></tr></table></figure>
+<p>虽然程序员可以直接用一个list类代替一个正式的stack类，但是列表还包括一些不符合这种抽象数据类型的方法（比如：增加或者移除处于列表任何位置的元素）。同时，list类所使用的术语也不能与栈这种抽象数据类型的传统命名方法精确对应，特别是append方法和push方法之间的区别。相反，我们将强调如何使用一个列表实现栈元素的内部存储，并同时提供一个符合堆栈的公共接口。</p>
+<table>
+<thead>
+<tr class="header">
+<th>栈方法</th>
+<th>用Python列表实现</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S.push(e)</td>
+<td>L.append(e)</td>
+</tr>
+<tr class="even">
+<td>S.pop()</td>
+<td>L.pop()</td>
+</tr>
+<tr class="odd">
+<td>S.top()</td>
+<td>L[-1]</td>
+</tr>
+<tr class="even">
+<td>S.is_empty()</td>
+<td>len(L) == 0</td>
+</tr>
+<tr class="odd">
+<td>len(S)</td>
+<td>len(L)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>用Python列表作为存储实现一个栈</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ArrayStack</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.data = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(self.data)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(self.data) == <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self,e</span>):</span><br><span class="line">        self.data.append(e)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">top</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Stack is empty&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> self.data[-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">             <span class="keyword">raise</span> Empty(<span class="string">&#x27;Stack is empty&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> self.data.pop()</span><br></pre></td></tr></table></figure>
+<h3 id="基于栈的一些应用">1.3 基于栈的一些应用</h3>
+<blockquote>
+<p>例1-2 LeetCode 20. 有效的括号（easy）</p>
+</blockquote>
+<p>给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s
+，判断字符串是否有效。</p>
+<p>有效字符串需满足：</p>
+<ol type="1">
+<li>左括号必须用相同类型的右括号闭合。</li>
+<li>左括号必须以正确的顺序闭合。</li>
+<li>每个右括号都有一个对应的相同类型的左括号。</li>
+</ol>
+<p><strong>示例 1：</strong></p>
+<blockquote>
+<p><strong>输入</strong>：s = "()"</p>
+<p><strong>输出</strong>：true</p>
+</blockquote>
+<p><strong>示例 2：</strong></p>
+<blockquote>
+<p><strong>输入：</strong>s = "()<span></span>"</p>
+<p><strong>输出：</strong>true</p>
+</blockquote>
+<p>示例 3：</p>
+<blockquote>
+<p><strong>输入：</strong>s = "(]"</p>
+<p><strong>输出：</strong>false</p>
+</blockquote>
+<p><strong>思路一：</strong></p>
+<p>自左到右，我们可以逐一判断该字符串内的每个括号，如果是左括号，那么我们就将它压入一个栈中，如果是右括号，那么我们就判断这个右括号和栈顶的左括号是否匹配，如果是，就弹出栈顶括号，如果不是，就返回false。</p>
+<p>记住，我们的栈是一个只储存左括号的栈，原因是右括号如果入栈，那么它将再也弹不出去</p>
+<p>最后，如果这个字符串是有效的，那么我们就得到了一个空栈，反之则无效。</p>
+<p>  <strong>代码实现：</strong> <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isValid</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        match_dic = &#123;<span class="string">&#x27;)&#x27;</span>:<span class="string">&#x27;(&#x27;</span>, <span class="string">&#x27;]&#x27;</span>:<span class="string">&#x27;[&#x27;</span>, <span class="string">&#x27;&#125;&#x27;</span>:<span class="string">&#x27;&#123;&#x27;</span>&#125;</span><br><span class="line">        temp_list = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> ch <span class="keyword">in</span> <span class="string">&#x27;([&#123;&#x27;</span>:</span><br><span class="line">                temp_list.append(ch)</span><br><span class="line">            <span class="keyword">elif</span> ch <span class="keyword">in</span> <span class="string">&#x27;)]&#125;&#x27;</span>:</span><br><span class="line">                <span class="comment"># 右括号比左括号先出现, 不能闭合</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> temp_list:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># 遇到右括号, 必然要与上一个左括号闭合, 如果不匹配就 False</span></span><br><span class="line">                <span class="keyword">if</span> match_dic[ch] == temp_list[-<span class="number">1</span>]:</span><br><span class="line">                    temp_list.pop(-<span class="number">1</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 正常闭合的情况下, 栈里面应该全都弹出去了, 所以应该是空的</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> temp_list:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>思路二：</strong></p>
+<p>如果一个字符串是有效的括号，那么它就会在中间出现一个'[]' 或 '{}' 或
+'()'结构，当我们删去这些结构后，余下的仍然是一个有效括号。因此，我们可以对一个有效的括号不断进行该操作，直到字符串变空。</p>
+<p>  <strong>代码实现：</strong> <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isValid</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="string">&#x27;&#123;&#125;&#x27;</span> <span class="keyword">in</span> s <span class="keyword">or</span> <span class="string">&#x27;()&#x27;</span> <span class="keyword">in</span> s <span class="keyword">or</span> <span class="string">&#x27;[]&#x27;</span> <span class="keyword">in</span> s:</span><br><span class="line">            s = s.replace(<span class="string">&#x27;&#123;&#125;&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            s = s.replace(<span class="string">&#x27;[]&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            s = s.replace(<span class="string">&#x27;()&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> s == <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
         <category>数据结构</category>
