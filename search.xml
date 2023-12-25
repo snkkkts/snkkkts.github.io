@@ -107,6 +107,36 @@ Out）的原理运作，堆栈常用一维数组或链接串列来实现。常�
 <p>如果一个字符串是有效的括号，那么它就会在中间出现一个'[]' 或 '{}' 或
 '()'结构，当我们删去这些结构后，余下的仍然是一个有效括号。因此，我们可以对一个有效的括号不断进行该操作，直到字符串变空。</p>
 <p>  <strong>代码实现：</strong> <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isValid</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="string">&#x27;&#123;&#125;&#x27;</span> <span class="keyword">in</span> s <span class="keyword">or</span> <span class="string">&#x27;()&#x27;</span> <span class="keyword">in</span> s <span class="keyword">or</span> <span class="string">&#x27;[]&#x27;</span> <span class="keyword">in</span> s:</span><br><span class="line">            s = s.replace(<span class="string">&#x27;&#123;&#125;&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            s = s.replace(<span class="string">&#x27;[]&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            s = s.replace(<span class="string">&#x27;()&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> s == <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>例1-3 LeetCode 402. 移掉K位数字（medium）</p>
+</blockquote>
+<p>给你一个以字符串表示的非负整数 num 和一个整数 k ，移除这个数中的 k
+位数字，使得剩下的数字最小。请你以字符串形式返回这个最小的数字。</p>
+<p><strong>示例 1 ：</strong></p>
+<blockquote>
+<p><strong>输入：</strong> num = "1432219", k = 3</p>
+<p><strong>输出：</strong>"1219"</p>
+<p><strong>解释：</strong> 移除掉三个数字 4, 3, 和 2
+形成一个新的最小的数字 1219 。</p>
+</blockquote>
+<p><strong>示例 2 ：</strong></p>
+<blockquote>
+<p><strong>输入：</strong> num = "10200", k = 1</p>
+<p><strong>输出：</strong>"200"</p>
+<p><strong>解释：</strong> 移掉首位的 1 剩下的数字为 200.
+注意输出不能有任何前导零。</p>
+</blockquote>
+<p><strong>示例 3 ：</strong></p>
+<blockquote>
+<p><strong>输入：</strong> num = "10", k = 2</p>
+<p><strong>输出：</strong>"0"</p>
+<p><strong>解释：</strong> 从原数字移除所有的数字，剩余为空就是 0 。</p>
+</blockquote>
+<p><strong>思路：</strong>
+我们知道，对于两个数1234a6和1234b6，如果a大于b，那么前者就大于后者，反之则小于。也就是说，在两个位数相同的数中，相同位第一个不同的数字大小决定了两个数的大小，那么我们就可以有如下想法：维护单调递增栈。</p>
+<p>具体实现过程如下：</p>
+<p>我们从头扫字符串的每位数字，如果一个数字比栈顶的数字大，那么它就应该入栈，反之，则弹出栈顶数字，再压入该数。弹出k次后停止，此时即为所求。如果没有经过k次就停止了，我们取前n-k位作为我们的答案，因为我们得到了单调递增栈，后面的数不会比前面的更小。</p>
+<p>  <strong>代码实现：</strong> <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">removeKdigits</span>(<span class="params">self, num: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        stk = []</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> num:</span><br><span class="line">            <span class="keyword">while</span> stk <span class="keyword">and</span> c &lt; stk[-<span class="number">1</span>] <span class="keyword">and</span> k:</span><br><span class="line">                stk.pop()</span><br><span class="line">                k -= <span class="number">1</span></span><br><span class="line">            stk.append(c)</span><br><span class="line">        res = <span class="string">&#x27;&#x27;</span>.join(stk)[:<span class="built_in">len</span>(stk) - k].lstrip(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> res <span class="keyword">if</span> res <span class="keyword">else</span> <span class="string">&#x27;0&#x27;</span></span><br><span class="line"><span class="comment"># 注：字符串的.lstrip方法可以用来去除字符串左侧的指定字符和特定序列。</span></span><br><span class="line"><span class="comment"># 与之类似的，rstrip方法可以去除右侧的，strip方法可以去除两侧的。</span></span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
         <category>数据结构</category>
