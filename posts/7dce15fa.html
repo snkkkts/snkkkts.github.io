@@ -30,7 +30,7 @@
 <meta property="og:description" content="栈、队列和双端队列 1. 栈   定义： 堆栈（stack）又称为栈 或 堆叠，是计算机科学中的一种抽象资料类型，只允许在有序的线性资料集合的一端（称为堆栈顶端，top）进行加入数据（push）和移除数据（pop）的运算。因而按照后进先出（LIFO, Last In First Out）的原理运作，堆栈常用一维数组或链接串列来实现。常与另一种有序的线性资料集合队列相提并论。用户可以在任">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-24T08:15:43.343Z">
-<meta property="article:modified_time" content="2023-12-26T02:25:03.541Z">
+<meta property="article:modified_time" content="2023-12-29T09:39:47.003Z">
 <meta property="article:author" content="snkkkts">
 <meta property="article:tag" content="数据结构">
 <meta property="article:tag" content="栈">
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-26 10:25:03" itemprop="dateModified" datetime="2023-12-26T10:25:03+08:00">2023-12-26</time>
+                <time title="修改时间：2023-12-29 17:39:47" itemprop="dateModified" datetime="2023-12-29T17:39:47+08:00">2023-12-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -266,14 +266,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>6.7k</span>
+              <span>9.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
+              <span>9 分钟</span>
             </span>
 
         </div>
@@ -517,6 +517,133 @@ FIFO)的原则。也就是说，元素可以在任何时刻进行插入，但是
 <li>_front:是一个整数，代表_data实例队列中的第一个索引。它被初始化为0.</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ArrayQueue</span>:</span><br><span class="line">    DEFAULT_CAPACITY = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self._data = [<span class="literal">None</span>] * ArrayQueue.DEFAULT_CAPACITY</span><br><span class="line">        self._size = <span class="number">0</span></span><br><span class="line">        self._front = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._size</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._size == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">first</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Queue is empty&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> self._data[self._front]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dequeue</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Queue is empty&#x27;</span>)</span><br><span class="line">        answer = self._size[self._front] </span><br><span class="line">        self._data[self.front] = <span class="literal">None</span></span><br><span class="line">        self._front = (self._front + <span class="number">1</span>) % <span class="built_in">len</span>(self._data)</span><br><span class="line">        self._size -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> answer</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">enqueue</span>(<span class="params">self,e</span>):</span><br><span class="line">        <span class="keyword">if</span> self._size == <span class="built_in">len</span>(self._data):</span><br><span class="line">            self._resize(<span class="number">2</span> * <span class="built_in">len</span>(self._data))</span><br><span class="line">        avail = (self._front + self._size) % <span class="built_in">len</span>(self._data)</span><br><span class="line">        self._data[avail] = e</span><br><span class="line">        self._size += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_resize</span>(<span class="params">self,cap</span>):</span><br><span class="line">        old = self._data</span><br><span class="line">        self._data = [<span class="literal">None</span>] * cap</span><br><span class="line">        walk = self._front</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(self._size):</span><br><span class="line">            self._data[k] = old[walk]</span><br><span class="line">            walk = (<span class="number">1</span> + walk) % <span class="built_in">len</span>(old)</span><br><span class="line">        self._front = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>注：</strong>
+在上述的实现过程中我们发现，当在队列满的状态下调用enqueue操作时，底层的存储数组就要进行扩展，但是调用dequeue操作时却并不会进行缩减数组的大小的处理。这样处理的结果是，底层的存储数组的大小是队列曾存储的最多元素的个数，而不是当前元素的个数。</p>
+<p>  无论什么时候，当所存储的元素降低导数组总存储能力的1/4时，一个健壮的方法是将这个数组大小缩减到当前容量的一半。这一处理可以通过在dequeue发那个发中插入如下两行代码来实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt; self._size &lt; <span class="built_in">len</span>(self._data) // <span class="number">4</span>:</span><br><span class="line">    self._resize(<span class="built_in">len</span>(self._data) // <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="双端队列">2.3 双端队列</h3>
+<p>  接下来考虑一个类队列数据结构，它支持在队列的头部和尾部都进行插入和删除操作，这样一种结构被称为<strong>双端队列</strong>（double-ended
+queue 或者 deque）。</p>
+<p>  双端队列的抽象数据类型比栈和队列的抽象数据类型要更普遍。在一些应用中，这些额外的普遍性是非常有用的，例如使用一个队列来描述餐馆当中的等餐队列。</p>
+<p>  <strong>使用环形数组实现双端队列</strong></p>
+<p>  我们可以使用上述代码段提供的ArrayQueue类相同的方法来实现队列的抽象数据类型。这个ADT应该支持如下方法：</p>
+<ul>
+<li><strong>D.add_first(e):</strong>
+向双端队列的前面添加一个元素<strong>e</strong>。</li>
+<li><strong>D.add_last(e):</strong>
+向双端队列的后面添加一个元素<strong>e</strong>。</li>
+<li><strong>D.delete_first():</strong>
+从双端队列中移除并返回第一个元素。若双端队列为空，则触发一个错误。</li>
+<li><strong>D.delete_last():</strong>
+从双端队列中移除并返回最后一个元素。若双端队列为空，则触发一个错误。</li>
+</ul>
+<p>  此外，双端队列的抽象数据类型还包括如下的方法：</p>
+<ul>
+<li><strong>D.first():</strong>
+返回（但不移除）双端队列的第一个元素。若双端队列为空，则触发一个错误。</li>
+<li><strong>D.last():</strong>
+返回（但不移除）双端队列的最后一个元素。若双端队列为空，则触发一个错误。</li>
+<li><strong>D.is_empty():</strong>
+如果双端队列不包括任何一个元素，则返回布尔值“True”。</li>
+<li><strong>len(D):</strong>
+返回当前双端队列中的元素个数。在Python中，我们用__len__这个特殊方法实现它。</li>
+</ul>
+<p>  我们不在此赘述具体的代码实现方式，无论什么时候，只要想直到双端队列的尾部索引，或者超过队尾的第一个可用的位置，我们就可以通过<strong>模运算</strong>计算得出。例如，方法last()就是用如下索引公式来实现的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">back = (self._front + self._size - <span class="number">1</span>) % <span class="built_in">len</span>(self._data)</span><br></pre></td></tr></table></figure>
+<p>  <strong>Python collections模块中的双端队列</strong></p>
+<p>  Python的标准collections模块中包含对一个双端队列类的实现方法，它是位于collections模块中的deque类，我们可以通过from
+collections import
+deque来访问它。下表给出了我们构造的双端队列与deque类的比较。</p>
+<table>
+<thead>
+<tr class="header">
+<th>我们的双端队列ADT</th>
+<th>collections.deque</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>len(D)</td>
+<td>len(D)</td>
+<td>元素数量</td>
+</tr>
+<tr class="even">
+<td>D.add_first()</td>
+<td>D.appendleft()</td>
+<td>加到开头</td>
+</tr>
+<tr class="odd">
+<td>D.add_last()</td>
+<td>D.append()</td>
+<td>加到结尾</td>
+</tr>
+<tr class="even">
+<td>D.delete_first()</td>
+<td>D.popleft()</td>
+<td>从开头移除</td>
+</tr>
+<tr class="odd">
+<td>D.delete_last()</td>
+<td>D.pop()</td>
+<td>从结尾移除</td>
+</tr>
+<tr class="even">
+<td>D.first()</td>
+<td>D[0]</td>
+<td>访问第一个元素</td>
+</tr>
+<tr class="odd">
+<td>D.last()</td>
+<td>D[-1]</td>
+<td>访问最后一个元素</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>D[j]</td>
+<td>通过索引访问任意一项</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>D[j] = val</td>
+<td>通过索引修改任意一项</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>D.clear()</td>
+<td>清除所有内容</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>D.rotate(k)</td>
+<td>循环右移k步</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>D.remove(e)</td>
+<td>移除第一个匹配的元素</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>D.count(e)</td>
+<td>统计对于e匹配的数量</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注1：</strong>
+rotate方法被描述为“循环右移k步”，它相当于对数组中每个元素整体右移k个长度，到达数组尾部后循环到开头。</p>
+<p><strong>注2：</strong>
+库函数队列的构造函数同样支持一个可选的maxlen参数以建立一个固定长度的双端队列（deque(maxlen=10)）。然而，当双端队列满时，如果在队列的任意一端调用append方法，它并不会触发一个错误；相反，这会导致在相反一段移除一个元素。也就是说，当队列满时，调用appendleft方法会导致右端一个隐藏的pop调用发生，以便为新加入的元素腾出空间。下面给出了一些简单的实例。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个包含一些元素的 deque</span></span><br><span class="line">my_deque = deque([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在指定位置插入元素</span></span><br><span class="line">my_deque.insert(<span class="number">2</span>, <span class="number">99</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 移除指定值的第一个匹配项</span></span><br><span class="line">my_deque.remove(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回指定值的第一个匹配项的索引</span></span><br><span class="line">index = my_deque.index(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回指定值的出现次数</span></span><br><span class="line">count = my_deque.count(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转 deque 中的元素</span></span><br><span class="line">my_deque.reverse()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出结果</span></span><br><span class="line"><span class="built_in">print</span>(my_deque)   <span class="comment"># 输出: deque([5, 4, 99, 3, 1])</span></span><br><span class="line"><span class="built_in">print</span>(index)      <span class="comment"># 输出: 1</span></span><br><span class="line"><span class="built_in">print</span>(count)      <span class="comment"># 输出: 0（因为 2 已被移除）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># rotate的应用</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个包含一些元素的 deque</span></span><br><span class="line">my_deque = deque([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 向右循环移动两步</span></span><br><span class="line">my_deque.rotate(<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(my_deque)  <span class="comment"># 输出: deque([4, 5, 1, 2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向左循环移动一步</span></span><br><span class="line">my_deque.rotate(-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(my_deque)  <span class="comment"># 输出: deque([5, 1, 2, 3, 4])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># maxlen的应用</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个最大长度为 3 的 deque</span></span><br><span class="line">my_deque = deque(maxlen=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 向 deque 中添加元素</span></span><br><span class="line">my_deque.append(<span class="number">1</span>)</span><br><span class="line">my_deque.append(<span class="number">2</span>)</span><br><span class="line">my_deque.append(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(my_deque)  <span class="comment"># 输出: deque([1, 2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 超过最大长度，会自动删除左侧元素</span></span><br><span class="line">my_deque.append(<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(my_deque)  <span class="comment"># 输出: deque([2, 3, 4])</span></span><br></pre></td></tr></table></figure></p>
+<p>  <strong>双栈模拟队列</strong></p>
+<p>  还有一种冷门的方法是使用两个 栈 来模拟一个队列。</p>
+<p>  这种方法使用两个栈 F, S 模拟一个队列，其中 F 是队尾的栈，S
+代表队首的栈，支持 push（在队尾插入），pop（在队首弹出）操作：</p>
+<p>  push：插入到栈 F 中。</p>
+<p>  pop：如果 S 非空，让 S 弹栈；否则把 F 的元素倒过来压到 S
+中（其实就是一个一个弹出插入，做完后是首尾颠倒的），然后再让 S
+弹栈。</p>
+<p>  容易证明，每个元素只会进入/转移/弹出一次，均摊复杂度 O(1)。</p>
 
     </div>
 
@@ -656,7 +783,7 @@ FIFO)的原则。也就是说，元素可以在任何时刻进行插入，但是
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E9%98%9F%E5%88%97%E5%92%8C%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97"><span class="nav-text">栈、队列和双端队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88"><span class="nav-text">1. 栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">1.1 栈的抽象数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%9F%BA%E4%BA%8E%E6%95%B0%E7%BB%84%E7%9A%84%E6%A0%88%E5%AE%9E%E7%8E%B0"><span class="nav-text">1.2 简单的基于数组的栈实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%A0%88%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8"><span class="nav-text">1.3 基于栈的一些应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97"><span class="nav-text">2. 队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">2.1 队列的抽象数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E7%BB%84%E7%9A%84%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0"><span class="nav-text">2.2 基于数组的队列实现</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E9%98%9F%E5%88%97%E5%92%8C%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97"><span class="nav-text">栈、队列和双端队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88"><span class="nav-text">1. 栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">1.1 栈的抽象数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%9F%BA%E4%BA%8E%E6%95%B0%E7%BB%84%E7%9A%84%E6%A0%88%E5%AE%9E%E7%8E%B0"><span class="nav-text">1.2 简单的基于数组的栈实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%A0%88%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8"><span class="nav-text">1.3 基于栈的一些应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97"><span class="nav-text">2. 队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">2.1 队列的抽象数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E7%BB%84%E7%9A%84%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0"><span class="nav-text">2.2 基于数组的队列实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97"><span class="nav-text">2.3 双端队列</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -785,19 +912,19 @@ FIFO)的原则。也就是说，元素可以在任何时刻进行插入，但是
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">7k</span>
+    <span title="站点总字数">10k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">6 分钟</span>
+    <span title="站点阅读时长">9 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共3.9k字</span>
+  <span class="post-count">博客全站共5.5k字</span>
 </div>
         
 
