@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-osx.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"snkkkts.icu","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="链表   在本章中，我们将介绍一种名为链表的数据结构，它为基于数组的序列提供了另一种选择。基于数组的序列和链表都能够对其中的元素保持一定的顺序，但采用的方式截然不同。数组提供更加集中的表示法，一个大的内存块能够为许多元素提供存储和引用。相对的，一个链表依赖于更多的分布式表示方法，采用称作节点的轻量级对象，分配给每一个元素。每个节点维护一个指向它的元素的引用，并含一个或多个指向相邻节点的引用，这样">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础数据结构：链表">
+<meta property="og:url" content="http://snkkkts.icu/posts/6b848df6.html">
+<meta property="og:site_name" content="snkの学习分享">
+<meta property="og:description" content="链表   在本章中，我们将介绍一种名为链表的数据结构，它为基于数组的序列提供了另一种选择。基于数组的序列和链表都能够对其中的元素保持一定的顺序，但采用的方式截然不同。数组提供更加集中的表示法，一个大的内存块能够为许多元素提供存储和引用。相对的，一个链表依赖于更多的分布式表示方法，采用称作节点的轻量级对象，分配给每一个元素。每个节点维护一个指向它的元素的引用，并含一个或多个指向相邻节点的引用，这样">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-11T05:50:30.927Z">
+<meta property="article:modified_time" content="2024-01-12T08:22:28.814Z">
+<meta property="article:author" content="snkkkts">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="链表">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://snkkkts.icu/posts/6b848df6.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>基础数据结构：链表 | snkの学习分享</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="snkの学习分享" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">snkの学习分享</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://snkkkts.icu/posts/6b848df6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="snkkkts">
+      <meta itemprop="description" content="循此苦旅，直抵群星">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="snkの学习分享">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基础数据结构：链表
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-11 13:50:30" itemprop="dateCreated datePublished" datetime="2024-01-11T13:50:30+08:00">2024-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-01-12 16:22:28" itemprop="dateModified" datetime="2024-01-12T16:22:28+08:00">2024-01-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">基础数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/6b848df6.html" class="post-meta-item leancloud_visitors" data-flag-title="基础数据结构：链表" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/6b848df6.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/6b848df6.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="链表">链表</h1>
+<p>  在本章中，我们将介绍一种名为<strong>链表</strong>的数据结构，它为基于数组的序列提供了另一种选择。基于数组的序列和链表都能够对其中的元素保持一定的顺序，但采用的方式截然不同。数组提供更加集中的表示法，一个大的内存块能够为许多元素提供存储和引用。相对的，一个链表依赖于更多的分布式表示方法，采用称作<strong>节点</strong>的轻量级对象，分配给每一个元素。每个节点维护一个指向它的元素的引用，并含一个或多个指向相邻节点的引用，这样做的目的是为了集中地表示序列的线性顺序。</p>
+<span id="more"></span>
+<p>  内存空间是所有程序的公共资源，在一个复杂的系统运行环境下，空闲的内存空间可能散落在内存各处。我们知道，存储数组的内存空间必须是连续的，而当数组非常大时，内存可能无法提供如此大的连续空间。此时链表的灵活性优势就体现出来了。链表的设计使得各个节点可以分散存储在内存各处，它们的内存地址无须连续。</p>
+<blockquote>
+<p>链表的定义类</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ListNode</span>:</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;链表节点类&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,val:<span class="built_in">int</span></span>):</span><br><span class="line">        self.val: <span class="built_in">int</span> = val    <span class="comment"># 节点值     </span></span><br><span class="line">        self.<span class="built_in">next</span>: ListNode | <span class="literal">None</span> = <span class="literal">None</span>    <span class="comment"># 指向下一节点的引用</span></span><br></pre></td></tr></table></figure>
+<h2 id="单向链表">1.单向链表</h2>
+<p>  链表中最简单的一种是单向链表，它包含两个域，一个信息域和一个指针域。这个链接指向链表中的下一个节点，而最后一个节点则指向一个空值。因此在相同数据量下，链表比数组占用更多的内存空间。</p>
+<blockquote>
+<p>一个简单的单向链表的流程图</p>
+</blockquote>
+<p><img
+src="https://www.hello-algo.com/chapter_array_and_linkedlist/linked_list.assets/linkedlist_definition.png" /></p>
+<p>  <strong>初始化链表</strong></p>
+<p>  建立链表分为两步，第一步是初始化各个节点对象，第二步是构建节点之间的引用关系。初始化完成后，我们就可以从链表的头节点触发，通过引用指向<code>next</code>一次访问所有节点</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化链表 1 -&gt; 3 -&gt; 2 -&gt; 5 -&gt; 4</span></span><br><span class="line"><span class="comment"># 初始化各个节点</span></span><br><span class="line">n0 = ListNode(<span class="number">1</span>)</span><br><span class="line">n1 = ListNode(<span class="number">3</span>)</span><br><span class="line">n2 = ListNode(<span class="number">2</span>)</span><br><span class="line">n3 = ListNode(<span class="number">5</span>)</span><br><span class="line">n4 = ListNode(<span class="number">4</span>)</span><br><span class="line"><span class="comment"># 构建节点之间的引用</span></span><br><span class="line">n0.<span class="built_in">next</span> = n1</span><br><span class="line">n1.<span class="built_in">next</span> = n2</span><br><span class="line">n2.<span class="built_in">next</span> = n3</span><br><span class="line">n3.<span class="built_in">next</span> = n4</span><br></pre></td></tr></table></figure>
+<p>  我们通常将头节点当作链表的代称，比如以上代码中的链表可记作链表<code>n0</code></p>
+<p>  <strong>插入节点</strong></p>
+<p>  在链表中插入节点非常容易，如下图所示，假设我们想在相邻的两个节点<code>n0</code>和<code>n1</code>之间插入一个新节点<code>p</code>，则只需改变两个节点引用（指针）即可，时间复杂度为<span
+class="math inline">\(O(1)\)</span>。相比之下，数组中插入元素的时间复杂度为<span
+class="math inline">\(O(n)\)</span>，在大数据量下的效率较低。</p>
+<blockquote>
+<p>链表插入节点示例</p>
+</blockquote>
+<p><img
+src="https://www.hello-algo.com/chapter_array_and_linkedlist/linked_list.assets/linkedlist_insert_node.png" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">n0: ListNode, P: ListNode</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;在链表的节点 n0 之后插入节点 P&quot;&quot;&quot;</span></span><br><span class="line">    n1 = n0.<span class="built_in">next</span></span><br><span class="line">    P.<span class="built_in">next</span> = n1</span><br><span class="line">    n0.<span class="built_in">next</span> = P</span><br></pre></td></tr></table></figure>
+<p>  <strong>删除节点</strong></p>
+<p>  如下图所示，在链表中删除节点也变得非常方便，只需要改变一个节点的引用（指针）即可。</p>
+<p>  请注意，尽管在删除操作完成后节点 P 仍然指向 n1
+，但实际上遍历此链表已经无法访问到 P ，这意味着 P
+已经不再属于该链表了。</p>
+<p><img
+src="https://www.hello-algo.com/chapter_array_and_linkedlist/linked_list.assets/linkedlist_remove_node.png" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">remove</span>(<span class="params">n0: ListNode</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;删除链表的节点 n0 之后的首个节点&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> n0.<span class="built_in">next</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="comment"># n0 -&gt; P -&gt; n1</span></span><br><span class="line">    P = n0.<span class="built_in">next</span></span><br><span class="line">    n1 = P.<span class="built_in">next</span>    <span class="comment"># 此时构建了n0 -&gt; P -&gt; n1的链表</span></span><br><span class="line">    n0.<span class="built_in">next</span> = n1    <span class="comment"># 此时删除了n0后的节点p</span></span><br></pre></td></tr></table></figure>
+<p>  <strong>访问节点</strong></p>
+<p>  在链表中访问节点的效率较低。对比数组来说，我们可以在<span
+class="math inline">\(O(1)\)</span>时间内访问数组中的任意元素。链表则需要从头节点出发，逐个向后遍历，直至找到目标节点。也就是说，访问链表的第<span
+class="math inline">\(i\)</span>个节点需要循环<span
+class="math inline">\(i-1\)</span>轮，时间复杂度为<span
+class="math inline">\(O(n)\)</span>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">access</span>(<span class="params">head: ListNode, index: <span class="built_in">int</span></span>) -&gt; ListNode | <span class="literal">None</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;访问链表中索引为 index 的节点&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(index):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        head = head.<span class="built_in">next</span></span><br><span class="line">    <span class="keyword">return</span> head</span><br></pre></td></tr></table></figure>
+<p>  <strong>查找节点</strong></p>
+<p>  遍历列表，查找其中值为<code>target</code>的节点，输出该节点在链表中的索引。此过程也属于线性查找。代码如下所示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">head: ListNode, target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;在链表中查找值为 target 的首个节点&quot;&quot;&quot;</span></span><br><span class="line">    index = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> head:</span><br><span class="line">        <span class="keyword">if</span> head.val == target:</span><br><span class="line">            <span class="keyword">return</span> index</span><br><span class="line">        head = head.<span class="built_in">next</span></span><br><span class="line">        index += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="用单向链表实现栈">1.1 用单向链表实现栈</h3>
+<p>  在这一部分，我们将通过给出一个完整栈ADT的Python实现来说明单向链表的使用。设计这样的实现，我们需要决定用链表的头部或尾部来实现栈顶。最好的选择显而易见：因为只有在头部，我们才能在一个常数时间内有效地插入和删除元素。由于所有栈操作都会影响栈顶，因此规定栈顶在链表的头部。</p>
+<blockquote>
+<p>单向链表实现栈ADT</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LinkedStack</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment"># nested _Node class</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">_Node</span>:</span><br><span class="line">        __slots__ = <span class="string">&#x27;_val&#x27;</span>,<span class="string">&#x27;_next&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,val,<span class="built_in">next</span></span>):</span><br><span class="line">            self._val = val</span><br><span class="line">            self._<span class="built_in">next</span> =  <span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># stack mathods</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self._head = <span class="literal">None</span></span><br><span class="line">        self._size = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._size</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._size == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self,e</span>):</span><br><span class="line">        self._head = self._Node(e,self._head)    <span class="comment"># 新的头节点被定义为值为e，指针指向旧的头节点的节点</span></span><br><span class="line">        self._size += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">top</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Stack is empty&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> self._head._val</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Stack is empty&#x27;</span>)</span><br><span class="line">        answer = self._head._val</span><br><span class="line">        self._head = self._head._<span class="built_in">next</span></span><br><span class="line">        self._size -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> answer</span><br></pre></td></tr></table></figure>
+<h2 id="用单向链表实现队列">1.2 用单向链表实现队列</h2>
+<p>  正如用单向链表实现栈ADT一样，我们可以用单向链表实现队列ADT，且所有操作支持最坏情况的时间为<span
+class="math inline">\(O(1)\)</span>。由于需要对队列的两端执行操作，我们显式地为每个队列维护一个_head和一个_tail指针作为实例变量。一个很自然的做法是，将队列的前段和链表的头部对应，队列的后端与链表的尾部对应，因为必须使元素从队列的尾部进入队列，从队列的头部出队列（我们很难高效地从单向链表的尾部删除元素）。链表队列（LinkQueue）类的实现如以下代码所示。</p>
+<blockquote>
+<p>用单向链表实现队列ADT</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LinkedQueue</span>:</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">_Node</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self._head = <span class="literal">None</span></span><br><span class="line">        self._tail = <span class="literal">None</span></span><br><span class="line">        self._size = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._size</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._size == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">first</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Queue is empty&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> self._head._val</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dequeue</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="keyword">raise</span> Empty(<span class="string">&#x27;Queue is empty&#x27;</span>)</span><br><span class="line">        answer = self._head._val</span><br><span class="line">        self._head = self._head._<span class="built_in">next</span></span><br><span class="line">        self._size -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            self._tail = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">enqueue</span>(<span class="params">self,e</span>):</span><br><span class="line">        newset = self._Node(e,<span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            self._head = newset</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self._tail._<span class="built_in">next</span> = newset</span><br><span class="line">        self._tail = newset</span><br><span class="line">        self._size += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>  用单向链表实现队列的很多方面和用LinkedStack类实现非常相似，如嵌套_Node类的定义。链表队列的LinkedQueue的视线类似于LinkedStack的出栈，即删除队列的头部节点，但也有一些细微的差别。因为队列必须准确的维护尾部的引用（栈的实现中没有维护这样的变量）。通常，在头部的操作对尾部不产生影响。但在一个队列中调用元素出队列操作时，我们要同时删除列表的尾部。同时为了确保一致性，还要设置self._tail为None。</p>
+<h2 id="循环链表环形链表">2.循环链表（环形链表）</h2>
+<p>  在链表中，我们可以使单向链表尾部节点的“next”指针指向链表的头部，由此来获得一个更切实际的循环链表的概念。在循环链表中，任意节点都可以视作头节点。循环链表也可以实现一个循环队列类，这里不再赘述。</p>
+<h2 id="双向链表">3.双向链表</h2>
+<p>  在单向链表中，每个节点为其后继节点维护一个引用。我们已经说明了在管理一个序列的元素时如何使用这样的表示方法。然而，单向链表的不对称性产生了一些限制。我们强调过可以有效地想一个单向链表内部的任意位置插入一个节点，也可以在头部轻松删除一个节点，但是不能有效删除链表尾部的节点。更一般化的说法是，如果仅给定链表内部指向任意一个节点的引用，我们很难有效地删除该节点，因为我们无法立即确定待删除节点的前驱节点（而且删除处理中该前驱节点需要更新它的“next”引用）。</p>
+<p>  为了更好的对称性，我们定义了一个双向链表。与单向链表相比，双向链表记录了两个方向的引用。双向链表的节点定义同时包含指向后继节点（下一个节点）和前驱节点（上一个节点）的引用（指针）。相较于单向链表，双向链表更具灵活性，可以朝两个方向遍历链表，但相应地也需要占用更多的内存空间。这些列表支持更多各种时间复杂度为<span
+class="math inline">\(O(1)\)</span>的更新操作，这些更新操作包括在列表的任意位置插入和删除节点。我们会继续用“next”表示指向当前节点的后继节点的引用，并引入“prev”引用其前驱节点。</p>
+<p>  <strong>头哨兵和尾哨兵</strong></p>
+<p>  在操作接近一个双向链表的边界时，为了避免一些特殊情况，在链表的两端都追加节点是很有用处的：在列表的起始位置添加头节点（header），在列表的结尾位置添加尾节点（tailer）。这些“特定”的节点被称为哨兵。这些节点中并不存储主序列的元素。特别的，头节点有时会存储链表长度等基本信息。</p>
+<p>  当使用哨兵节点时，一个空链表需要初始化，使头节点的“next”域指向尾节点，并令尾节点的“prev”域指向头节点。哨兵节点的其他域是无关紧要的。对于一个非空的链表，头节点的“next”域将指向一个序列中第一个真正包含元素的节点，对应的尾节点的“prev”域指向这个序列中最后一个包含元素的节点。</p>
+<p>  <strong>使用哨兵的优点</strong></p>
+<p>  虽然不使用哨兵节点就可以实现双向链表，但哨兵只占用很小的额外空间就能极大地简化操作的逻辑。最明显的是，头和尾节点从来不改变————只改变头节点和尾节点之间的节点。此外，可以用统一的方式处理所有插入节点操作，因为一个新节点总是被放在一对已知节点之间。类似地，每个待删除的元素都是确保被存储在前后都有邻居的节点中的。</p>
+<blockquote>
+<p>双向链表的基本实现</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ListNode</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;双向链表节点类&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, val: <span class="built_in">int</span></span>):</span><br><span class="line">        self.val: <span class="built_in">int</span> = val                <span class="comment"># 节点值</span></span><br><span class="line">        self.<span class="built_in">next</span>: ListNode | <span class="literal">None</span> = <span class="literal">None</span>  <span class="comment"># 指向后继节点的引用</span></span><br><span class="line">        self.prev: ListNode | <span class="literal">None</span> = <span class="literal">None</span>  <span class="comment"># 指向前驱节点的引用</span></span><br></pre></td></tr></table></figure>
+<p>  下图给出了常见的链表种类</p>
+<p><img
+src="https://www.hello-algo.com/chapter_array_and_linkedlist/linked_list.assets/linkedlist_common_types.png" /></p>
+
+    </div>
+
+    
+    
+    
+
+    
+      <div>
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      </div>
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>snkkkts
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://snkkkts.icu/posts/6b848df6.html" title="基础数据结构：链表">http://snkkkts.icu/posts/6b848df6.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/7dce15fa.html" rel="prev" title="基础数据结构：栈和队列">
+      <i class="fa fa-chevron-left"></i> 基础数据结构：栈和队列
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-text">链表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-text">1.单向链表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-text">1.1 用单向链表实现栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97"><span class="nav-text">1.2 用单向链表实现队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E9%93%BE%E8%A1%A8%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8"><span class="nav-text">2.循环链表（环形链表）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-text">3.双向链表</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="snkkkts"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">snkkkts</p>
+  <div class="site-description" itemprop="description">循此苦旅，直抵群星</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/snkkkts" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;snkkkts" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yige-mi-lu-de-meng-xin" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yige-mi-lu-de-meng-xin" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      个人推荐的实用网站
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://google.com/" title="https:&#x2F;&#x2F;google.com" rel="noopener" target="_blank">Google</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luogu.com.cn/" title="https:&#x2F;&#x2F;www.luogu.com.cn" rel="noopener" target="_blank">洛谷</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode.cn/" title="https:&#x2F;&#x2F;leetcode.cn" rel="noopener" target="_blank">LeetCode</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://stackoverflow.com/" title="https:&#x2F;&#x2F;stackoverflow.com" rel="noopener" target="_blank">StackOverFlow</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://chat.openai.com/" title="https:&#x2F;&#x2F;chat.openai.com" rel="noopener" target="_blank">ChatGpt</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://oi.wiki/" title="https:&#x2F;&#x2F;oi.wiki" rel="noopener" target="_blank">OI Wiki</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dec41.user.srcf.net/notes" title="https:&#x2F;&#x2F;dec41.user.srcf.net&#x2F;notes" rel="noopener" target="_blank">Cambridge Notes</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://books.halfrost.com/leetcode" title="https:&#x2F;&#x2F;books.halfrost.com&#x2F;leetcode" rel="noopener" target="_blank">LeetCode Cook Book</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.runoob.com/" title="https:&#x2F;&#x2F;www.runoob.com" rel="noopener" target="_blank">菜鸟教程</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/krahets/hello-algo" title="https:&#x2F;&#x2F;github.com&#x2F;krahets&#x2F;hello-algo" rel="noopener" target="_blank">hello-algo</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.r2coding.com/#/" title="https:&#x2F;&#x2F;www.r2coding.com&#x2F;#&#x2F;" rel="noopener" target="_blank">Road To Coding</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://singlelogin.se/" title="https:&#x2F;&#x2F;singlelogin.se" rel="noopener" target="_blank">Z-Library</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://csdiy.wiki/" title="https:&#x2F;&#x2F;csdiy.wiki" rel="noopener" target="_blank">CS自学指南</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://codeforces.com/" title="https:&#x2F;&#x2F;codeforces.com" rel="noopener" target="_blank">Codeforces</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://codetop.cc/home" title="https:&#x2F;&#x2F;codetop.cc&#x2F;home" rel="noopener" target="_blank">CodeTop</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2023 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">snkkkts</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">15k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共8.4k字</span>
+</div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"a3Jmo27kSWU1txjPcljEtjie-gzGzoHsz","app_key":"a28dHaY0bKOS5TA22gaTioSb","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'HKpd55ukN7JMIrus9Ruk4zI4-gzGzoHsz',
+      appKey     : 'n6Eu5YTgcnNChqTh1l175yGX',
+      placeholder: "快来输入评论吧......",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://hkpd55uk.lc-cn-n1-shared.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
